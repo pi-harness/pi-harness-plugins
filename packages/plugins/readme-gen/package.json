@@ -42,8 +42,7 @@
   },
   "dependencies": {
     "@pi-harness/plugin-api": "^0.1.27",
-    "@pi-harness/plugin-archify": "0.1.32",
-    "@pi-harness/plugin-readme-gen": "0.1.31"
+    "@pi-harness/plugin-archify": "0.1.32"
   },
   "devDependencies": {
     "@pi-harness/core": "^0.1.28"

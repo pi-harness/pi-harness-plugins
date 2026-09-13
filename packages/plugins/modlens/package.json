@@ -42,8 +42,7 @@
   },
   "dependencies": {
     "@liustack/modlens": "3.25.4",
-    "@pi-harness/plugin-api": "^0.1.27",
-    "@pi-harness/plugin-modlens": "0.1.31"
+    "@pi-harness/plugin-api": "^0.1.27"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "4.0.1",

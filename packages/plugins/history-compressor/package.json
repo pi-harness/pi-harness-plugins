@@ -42,7 +42,6 @@
   },
   "dependencies": {
     "@pi-harness/plugin-api": "^0.1.57",
-    "@pi-harness/plugin-history-compressor": "0.1.32",
     "@pi-harness/plugin-session-insights": "0.1.33"
   },
   "devDependencies": {

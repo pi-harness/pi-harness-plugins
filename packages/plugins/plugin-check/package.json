@@ -42,8 +42,7 @@
   },
   "dependencies": {
     "@pi-harness/plugin-api": "^0.1.27",
-    "yaml": "2.9.0",
-    "@pi-harness/plugin-plugin-check": "0.1.32"
+    "yaml": "2.9.0"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "4.0.1",

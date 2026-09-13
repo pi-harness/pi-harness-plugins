@@ -42,8 +42,7 @@
   },
   "dependencies": {
     "@pi-harness/plugin-api": "^0.1.27",
-    "semver": "7.8.5",
-    "@pi-harness/plugin-dependency-checker": "0.1.31"
+    "semver": "7.8.5"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "4.0.1",
