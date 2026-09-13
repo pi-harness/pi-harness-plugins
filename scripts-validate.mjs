@@ -1,0 +1,2 @@
+import { readdirSync, readFileSync } from 'node:fs';
+const names=new Set(); for(const d of readdirSync('packages/plugins',{withFileTypes:true})){if(!d.isDirectory())continue;const p=JSON.parse(readFileSync(`packages/plugins/${d.name}/package.json`));if(!/^@pi-harness\/plugin-[a-z0-9-]+$/.test(p.name)||names.has(p.name)||!p.version||!p.main||!p.types)throw Error(`invalid manifest: ${d.name}`);names.add(p.name)} console.log(`validated ${names.size} plugin manifests`);
