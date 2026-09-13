@@ -99,5 +99,13 @@
     "@pi-harness/plugin-reverse-skill": "^0.1.27",
     "@pi-harness/plugin-skill-guard": "^0.1.27",
     "@pi-harness/plugin-workspace-navigator": "^0.1.27"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pi-harness/pi-harness-plugins.git"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
