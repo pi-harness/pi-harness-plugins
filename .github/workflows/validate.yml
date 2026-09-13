@@ -6,6 +6,8 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: "47 6 * * *"
 jobs:
   check:
     runs-on: ubuntu-latest
