@@ -24,6 +24,10 @@ Add the package to a Cordis profile:
 
 The Pi Harness marketplace can install and enable catalogued plugins without editing a profile by hand. See the individual package README for configuration, permissions, and limitations.
 
+## Plugin directory
+
+See [PLUGINS.md](PLUGINS.md) for the complete package list.
+
 ## Repository layout
 
 `packages/plugins/<name>` is a standalone npm workspace. It contains the plugin entrypoint, manifest, tests, and package documentation. The root workspace only provides shared validation and release tooling.
