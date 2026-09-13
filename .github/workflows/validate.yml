@@ -8,5 +8,5 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: 22, cache: npm}
       - run: npm install --ignore-scripts
-      - run: npm run build
+      - run: npm run build --foreground-scripts
       - run: npm test
