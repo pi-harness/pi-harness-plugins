@@ -42,7 +42,8 @@
   },
   "dependencies": {
     "@pi-harness/plugin-api": "^0.1.27",
-    "@pi-harness/plugin-browser-fetch": "^0.1.27"
+    "@pi-harness/plugin-browser-fetch": "0.1.32",
+    "@pi-harness/plugin-browser-session": "0.1.33"
   },
   "devDependencies": {
     "@pi-harness/core": "^0.1.28"

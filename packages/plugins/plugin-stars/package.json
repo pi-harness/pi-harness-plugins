@@ -41,7 +41,8 @@
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
   "dependencies": {
-    "@pi-harness/plugin-api": "^0.1.27"
+    "@pi-harness/plugin-api": "^0.1.27",
+    "@pi-harness/plugin-plugin-stars": "0.1.31"
   },
   "devDependencies": {
     "@pi-harness/core": "^0.1.28"
