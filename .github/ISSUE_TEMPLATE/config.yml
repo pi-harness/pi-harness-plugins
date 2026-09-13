@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Pi Harness discussions
+    url: https://github.com/pi-harness/pi-harness/discussions
+    about: Ask usage and design questions there.
