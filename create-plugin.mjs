@@ -1,0 +1,2 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+const slug=process.argv[2]; if(!/^[a-z0-9-]+$/.test(slug??'')) throw Error('usage: node create-plugin.mjs <lowercase-plugin-name>'); const root=`packages/plugins/${slug}`; await mkdir(`${root}/src`,{recursive:true}); await mkdir(`${root}/test`,{recursive:true}); await writeFile(`${root}/README.md`,`# @pi-harness/plugin-${slug}\n\nDescribe behavior, configuration, permissions, and compatibility.\n`); console.log(`created ${root}`);
