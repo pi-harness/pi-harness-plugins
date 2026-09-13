@@ -1,1 +1,25 @@
-{"name":"@pi-harness/plugins","private":true,"type":"module","workspaces":["packages/plugins/*"],"scripts":{"build":"npm run build --workspaces --if-present","test":"npm test --workspaces --if-present"},"devDependencies":{"@modelcontextprotocol/sdk":"^1.30.0","@types/node":"^26.5.1","undici-types":"^8.10.2"}}
+{
+  "name": "@pi-harness/plugins",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/plugins/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@types/node": "^26.5.1",
+    "undici-types": "^8.10.2"
+  },
+  "dependencies": {
+    "@pi-harness/plugin-api": "^0.1.27",
+    "@pi-harness/plugin-workspace-navigator": "^0.1.27",
+    "@pi-harness/plugin-browser-fetch": "^0.1.27",
+    "@pi-harness/plugin-mcp-client": "^0.1.27",
+    "@pi-harness/plugin-skill-guard": "^0.1.27",
+    "@pi-harness/plugin-reverse-skill": "^0.1.27"
+  }
+}
