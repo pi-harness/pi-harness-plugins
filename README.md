@@ -36,6 +36,7 @@ See [PLUGINS.md](PLUGINS.md) for the complete package list.
 
 ```sh
 npm ci
+npm run validate
 npm run build
 npm test
 ```
