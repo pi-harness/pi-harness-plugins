@@ -8,6 +8,5 @@ jobs:
       - uses: actions/setup-node@v5
         with: {node-version: 22, cache: npm}
       - run: npm install --ignore-scripts
-      - run: node scripts-validate.mjs
-      - run: npm pack --dry-run --workspaces
+      - run: npm run validate
       - run: npm test
