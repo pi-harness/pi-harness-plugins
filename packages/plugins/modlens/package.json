@@ -41,7 +41,7 @@
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
   "dependencies": {
-    "@liustack/modlens": "3.25.4",
+    "@liustack/modlens": "3.26.1",
     "@pi-harness/plugin-api": "^0.1.27"
   },
   "peerDependencies": {
