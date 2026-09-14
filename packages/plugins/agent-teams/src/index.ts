@@ -217,6 +217,15 @@ function parseTeamParameters(value: unknown): TeamParameters {
   return params;
 }
 
+function parseTeamToolParameters(value: unknown): TeamParameters {
+  const outer = record(value);
+  if (outer !== undefined && Object.hasOwn(outer, "operation")) {
+    if (Object.keys(outer).length !== 1) throw new Error("Agent Teams nested parameters may contain only operation");
+    return parseTeamParameters(outer.operation);
+  }
+  return parseTeamParameters(value);
+}
+
 function normalizedHumanText(value: string | undefined, label: string, maximum: number, fallback?: string): string {
   if (value === undefined) {
     if (fallback !== undefined) return fallback;
@@ -784,6 +793,88 @@ function requiredId(value: string | undefined, action: TeamAction, kind: "member
   return teamId(value.trim(), kind);
 }
 
+const teamIdParameter = (description?: string) =>
+  Type.String({ minLength: 1, maxLength: 64, pattern: teamIdPatternSource, ...(description === undefined ? {} : { description }) });
+const taskStatusParameter = () =>
+  Type.Union([Type.Literal("todo"), Type.Literal("blocked"), Type.Literal("in_progress"), Type.Literal("done")]);
+const teamTaskOperationParameter = Type.Union(
+  [
+    Type.Object(
+      {
+        action: Type.Literal("add_task"),
+        id: Type.Optional(teamIdParameter("Optional task ID; generated when omitted")),
+        title: Type.String({ minLength: 1, maxLength: maxTaskTitleLength }),
+        assignee: Type.Optional(teamIdParameter()),
+        status: Type.Optional(taskStatusParameter()),
+        dependsOn: Type.Optional(Type.Array(teamIdParameter(), { maxItems: maxTaskDependencies })),
+      },
+      { additionalProperties: false },
+    ),
+    Type.Object(
+      {
+        action: Type.Literal("update_task"),
+        id: teamIdParameter("Task ID to update"),
+        title: Type.Optional(Type.String({ minLength: 1, maxLength: maxTaskTitleLength })),
+        assignee: Type.Optional(teamIdParameter()),
+        status: Type.Optional(taskStatusParameter()),
+        dependsOn: Type.Optional(Type.Array(teamIdParameter(), { maxItems: maxTaskDependencies })),
+      },
+      { additionalProperties: false },
+    ),
+    Type.Object({ action: Type.Literal("claim_task"), assignee: Type.Optional(teamIdParameter()) }, { additionalProperties: false }),
+    Type.Object(
+      { action: Type.Literal("remove_task"), id: teamIdParameter("Completed task ID to remove"), confirm: Type.Literal(true) },
+      { additionalProperties: false },
+    ),
+    Type.Object(
+      {
+        action: Type.Literal("add_member"),
+        id: Type.Optional(teamIdParameter("Optional member ID; generated from the name when omitted")),
+        name: Type.String({ minLength: 1, maxLength: maxMemberNameLength }),
+        role: Type.Optional(Type.String({ minLength: 1, maxLength: maxMemberRoleLength })),
+        status: Type.Optional(Type.Literal("idle")),
+      },
+      { additionalProperties: false },
+    ),
+    Type.Object(
+      { action: Type.Literal("remove_member"), id: teamIdParameter("Member ID to remove"), confirm: Type.Literal(true) },
+      { additionalProperties: false },
+    ),
+    Type.Object(
+      {
+        action: Type.Literal("send_message"),
+        from: teamIdParameter("Sender member ID"),
+        to: teamIdParameter("Recipient member ID"),
+        body: Type.String({ minLength: 1, maxLength: maxMessageBodyLength }),
+      },
+      { additionalProperties: false },
+    ),
+    Type.Object(
+      {
+        action: Type.Literal("read_messages"),
+        to: teamIdParameter("Recipient member ID"),
+        unreadOnly: Type.Optional(Type.Boolean()),
+        offset: Type.Optional(Type.Integer({ minimum: 0, maximum: maxTeamMessages, description: "Mailbox page offset; follow nextOffset" })),
+      },
+      { additionalProperties: false },
+    ),
+    Type.Object(
+      {
+        action: Type.Literal("clear_messages"),
+        id: Type.Optional(teamIdParameter("Optional member ID filter")),
+        confirm: Type.Literal(true),
+      },
+      { additionalProperties: false },
+    ),
+    Type.Object({ action: Type.Literal("get_state") }, { additionalProperties: false }),
+  ],
+  { description: "Choose one collaboration-ledger action and provide only that action's parameters" },
+);
+const teamTaskParameters = Type.Object(
+  { operation: teamTaskOperationParameter },
+  { additionalProperties: false, description: "Provide one action-specific Agent Teams operation" },
+);
+
 export default {
   name: "pi-agent-teams",
   inject: ["piSession", "piTools", "piPluginUi"],
@@ -799,60 +890,7 @@ export default {
         description:
           "Manage a bounded, durable collaboration ledger of named roles, dependency-aware tasks, and mailbox notes in the current Pi session. Does not spawn agents or send external messages.",
         promptSnippet: "manage the current session's durable collaboration ledger",
-        parameters: Type.Object(
-          {
-            action: Type.Union(
-              [
-                Type.Literal("add_task"),
-                Type.Literal("update_task"),
-                Type.Literal("claim_task"),
-                Type.Literal("remove_task"),
-                Type.Literal("add_member"),
-                Type.Literal("remove_member"),
-                Type.Literal("send_message"),
-                Type.Literal("read_messages"),
-                Type.Literal("clear_messages"),
-                Type.Literal("get_state"),
-              ],
-              { description: "Collaboration-ledger operation" },
-            ),
-            id: Type.Optional(
-              Type.String({
-                minLength: 1,
-                maxLength: 64,
-                pattern: teamIdPatternSource,
-                description: "Task ID for task actions, member ID for member actions and the optional clear_messages filter",
-              }),
-            ),
-            title: Type.Optional(Type.String({ minLength: 1, maxLength: maxTaskTitleLength })),
-            assignee: Type.Optional(Type.String({ minLength: 1, maxLength: 64, pattern: teamIdPatternSource })),
-            name: Type.Optional(Type.String({ minLength: 1, maxLength: maxMemberNameLength })),
-            role: Type.Optional(Type.String({ minLength: 1, maxLength: maxMemberRoleLength })),
-            status: Type.Optional(
-              Type.Union(
-                [
-                  Type.Literal("todo"),
-                  Type.Literal("blocked"),
-                  Type.Literal("in_progress"),
-                  Type.Literal("done"),
-                  Type.Literal("idle"),
-                  Type.Literal("working"),
-                ],
-                { description: "Task status or member status; working member status is derived from in-progress tasks" },
-              ),
-            ),
-            dependsOn: Type.Optional(Type.Array(Type.String({ minLength: 1, maxLength: 64, pattern: teamIdPatternSource }), { maxItems: maxTaskDependencies })),
-            from: Type.Optional(Type.String({ minLength: 1, maxLength: 64, pattern: teamIdPatternSource })),
-            to: Type.Optional(Type.String({ minLength: 1, maxLength: 64, pattern: teamIdPatternSource })),
-            body: Type.Optional(Type.String({ minLength: 1, maxLength: maxMessageBodyLength })),
-            unreadOnly: Type.Optional(Type.Boolean()),
-            offset: Type.Optional(
-              Type.Integer({ minimum: 0, maximum: maxTeamMessages, description: "Mailbox page offset; follow nextOffset to read remaining notes" }),
-            ),
-            confirm: Type.Optional(Type.Boolean({ description: "Required for removal and mailbox cleanup" })),
-          },
-          { additionalProperties: false },
-        ),
+        parameters: teamTaskParameters,
         executionMode: "sequential",
         async execute(_toolCallId, rawParams, signal): Promise<AgentToolResult<unknown>> {
           const operationSignal = signal === undefined ? lifecycle.signal : AbortSignal.any([signal, lifecycle.signal]);
@@ -861,7 +899,7 @@ export default {
           const header = manager.getHeader();
           return Promise.resolve().then(() => {
             throwIfCancelled(operationSignal);
-            const params = parseTeamParameters(rawParams);
+            const params = parseTeamToolParameters(rawParams);
             throwIfCancelled(operationSignal);
             if (currentManager() !== manager || manager.getHeader() !== header) throw new Error("Agent Teams session changed before execution");
             const loaded = readState(manager);
