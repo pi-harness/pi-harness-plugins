@@ -1,6 +1,6 @@
 {
   "name": "@pi-harness/plugin-reverse-skill",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "description": "Inspect untrusted Skill text and inject it only through an explicit bounded data boundary.",
   "keywords": [
     "cordis",
@@ -42,13 +42,13 @@
   },
   "dependencies": {
     "@pi-harness/plugin-api": "^0.1.27",
-    "@pi-harness/plugin-skill-guard": "0.1.32"
+    "@pi-harness/plugin-skill-guard": "^0.1.32"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "4.0.1",
+    "@deepseek-ai/cordis": "^4.0.1",
     "@deepseek-ai/schemastery": "3.18.1",
-    "@earendil-works/pi-ai": "0.84.4",
-    "@earendil-works/pi-coding-agent": "0.84.4"
+    "@earendil-works/pi-ai": "^0.84.4 || ^0.85.1",
+    "@earendil-works/pi-coding-agent": "^0.84.4 || ^0.85.1"
   },
   "engines": {
     "node": ">=22.19.0"

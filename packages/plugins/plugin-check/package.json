@@ -1,6 +1,6 @@
 {
   "name": "@pi-harness/plugin-plugin-check",
-  "version": "0.1.32",
+  "version": "0.1.33",
   "description": "Inspect installed plugin manifests and report unsafe, malformed, or incompatible extension metadata before loading it.",
   "keywords": [
     "cordis",
@@ -45,10 +45,10 @@
     "yaml": "2.9.0"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "4.0.1",
+    "@deepseek-ai/cordis": "^4.0.1",
     "@deepseek-ai/schemastery": "3.18.1",
-    "@earendil-works/pi-ai": "0.84.4",
-    "@earendil-works/pi-coding-agent": "0.84.4"
+    "@earendil-works/pi-ai": "^0.84.4 || ^0.85.1",
+    "@earendil-works/pi-coding-agent": "^0.84.4 || ^0.85.1"
   },
   "engines": {
     "node": ">=22.19.0"

@@ -1,6 +1,6 @@
 {
   "name": "@pi-harness/plugin-archify",
-  "version": "0.1.32",
+  "version": "0.1.33",
   "description": "Build a bounded, read-only architecture map from workspace components and package dependencies.",
   "keywords": [
     "cordis",
@@ -42,12 +42,12 @@
   },
   "dependencies": {
     "@pi-harness/plugin-api": "^0.1.27",
-    "@pi-harness/plugin-workspace-navigator": "0.1.31"
+    "@pi-harness/plugin-workspace-navigator": "^0.1.31"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "4.0.1",
-    "@earendil-works/pi-ai": "0.84.4",
-    "@earendil-works/pi-coding-agent": "0.84.4"
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@earendil-works/pi-ai": "^0.84.4 || ^0.85.1",
+    "@earendil-works/pi-coding-agent": "^0.84.4 || ^0.85.1"
   },
   "engines": {
     "node": ">=22.19.0"

@@ -1,6 +1,6 @@
 {
   "name": "@pi-harness/plugin-session-compare",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "description": "Compare two persisted Pi sessions by message role and text without modifying either session file.",
   "keywords": [
     "cordis",
@@ -44,9 +44,9 @@
     "@pi-harness/plugin-api": "^0.1.52"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "4.0.1",
-    "@earendil-works/pi-ai": "0.84.4",
-    "@earendil-works/pi-coding-agent": "0.84.4"
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@earendil-works/pi-ai": "^0.84.4 || ^0.85.1",
+    "@earendil-works/pi-coding-agent": "^0.84.4 || ^0.85.1"
   },
   "engines": {
     "node": ">=22.19.0"
