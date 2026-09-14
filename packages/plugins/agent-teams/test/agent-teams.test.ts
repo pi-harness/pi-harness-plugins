@@ -172,6 +172,65 @@ describe("agent teams plugin", () => {
     await expect(panels.snapshot()).resolves.toEqual([]);
   });
 
+  test("exposes action-specific tool schemas instead of inviting unrelated parameters", async () => {
+    const { tool } = await createPlugin();
+    type ActionSchema = {
+      additionalProperties?: boolean;
+      properties?: Record<string, { const?: unknown }>;
+      required?: string[];
+    };
+    type ToolSchema = {
+      type?: string;
+      additionalProperties?: boolean;
+      properties?: { operation?: { anyOf?: ActionSchema[] } };
+      required?: string[];
+    };
+    const parameters = tool.parameters as ToolSchema;
+    expect(parameters).toMatchObject({ type: "object", additionalProperties: false, required: ["operation"] });
+    const variants = parameters.properties?.operation?.anyOf;
+    expect(variants).toHaveLength(10);
+
+    const schema = (action: string): ActionSchema => {
+      const match = variants?.find((variant) => variant.properties?.action?.const === action);
+      if (match === undefined) throw new Error(`Missing schema for ${action}`);
+      return match;
+    };
+    const expected = {
+      add_task: { fields: ["action", "assignee", "dependsOn", "id", "status", "title"], required: ["action", "title"] },
+      update_task: { fields: ["action", "assignee", "dependsOn", "id", "status", "title"], required: ["action", "id"] },
+      claim_task: { fields: ["action", "assignee"], required: ["action"] },
+      remove_task: { fields: ["action", "confirm", "id"], required: ["action", "id", "confirm"] },
+      add_member: { fields: ["action", "id", "name", "role", "status"], required: ["action", "name"] },
+      remove_member: { fields: ["action", "confirm", "id"], required: ["action", "id", "confirm"] },
+      send_message: { fields: ["action", "body", "from", "to"], required: ["action", "from", "to", "body"] },
+      read_messages: { fields: ["action", "offset", "to", "unreadOnly"], required: ["action", "to"] },
+      clear_messages: { fields: ["action", "confirm", "id"], required: ["action", "confirm"] },
+      get_state: { fields: ["action"], required: ["action"] },
+    } as const;
+    for (const [action, contract] of Object.entries(expected)) {
+      expect(Object.keys(schema(action).properties ?? {}).sort(), action).toEqual(contract.fields);
+      expect(schema(action), action).toMatchObject({ additionalProperties: false, required: contract.required });
+    }
+  });
+
+  test("executes the provider-compatible nested operation while retaining flat-call compatibility", async () => {
+    const { tool } = await createPlugin();
+
+    await expect(
+      tool.execute(
+        "nested-add",
+        { operation: { action: "add_member", id: "schema-reviewer", name: "Schema Reviewer", role: "Verifier" } },
+        undefined,
+        undefined,
+        {} as never,
+      ),
+    ).resolves.toMatchObject({ details: { item: { id: "schema-reviewer" } } });
+    const state = await tool.execute("flat-state", { action: "get_state" }, undefined, undefined, {} as never);
+    expect((state.details as { members: unknown[] }).members).toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: "schema-reviewer" })]),
+    );
+  });
+
   test("restores state from the active session branch rather than a newer abandoned branch", async () => {
     const manager = SessionManager.inMemory();
     const base = manager.appendCustomEntry("pi-harness/agent-teams", checkpoint(persistedState("Base")));
