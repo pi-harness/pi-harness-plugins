@@ -41,7 +41,11 @@ npm run build
 npm test
 ```
 
-Builds validate package artifacts and tests run only where a package defines a test script. Keep runtime dependencies in the plugin manifest; do not rely on undeclared root dependencies.
+Validation builds every plugin and inspects its publishable tarball, while the test command runs the repository-wide Vitest suite. Keep runtime dependencies in the plugin manifest; do not rely on undeclared root dependencies.
+
+## Runtime compatibility
+
+Published plugins share Cordis and Pi runtime instances with the host through peer dependencies. The current release line supports Cordis `4.x` from `4.0.1` and the tested Pi `0.84` and `0.85` lines. `npm run validate` enforces the shared ranges across every plugin manifest, while the repository's development dependencies exercise the latest supported runtime so a host upgrade cannot silently leave install-blocking metadata behind.
 
 ## Publishing
 

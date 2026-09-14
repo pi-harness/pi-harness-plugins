@@ -1,6 +1,6 @@
 {
   "name": "@pi-harness/plugin-plugin-finder",
-  "version": "0.1.32",
+  "version": "0.1.33",
   "description": "Search a configured npm-compatible registry for Pi plugins with bounded queries and explicit installation handoff.",
   "keywords": [
     "cordis",
@@ -47,10 +47,10 @@
     "@pi-harness/core": "^0.1.28"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "4.0.1",
+    "@deepseek-ai/cordis": "^4.0.1",
     "@deepseek-ai/schemastery": "3.18.1",
-    "@earendil-works/pi-ai": "0.84.4",
-    "@earendil-works/pi-coding-agent": "0.84.4"
+    "@earendil-works/pi-ai": "^0.84.4 || ^0.85.1",
+    "@earendil-works/pi-coding-agent": "^0.84.4 || ^0.85.1"
   },
   "engines": {
     "node": ">=22.19.0"

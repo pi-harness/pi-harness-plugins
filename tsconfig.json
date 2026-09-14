@@ -5,10 +5,7 @@
     "moduleResolution": "NodeNext",
     "strict": true,
     "skipLibCheck": true,
-    "declaration": true,
-    "declarationMap": true,
-    "noEmit": false,
-    "sourceMap": true
+    "noEmit": true
   },
-  "exclude": ["**/*.test.ts", "**/test/**"]
+  "include": ["packages/plugins/*/src/**/*.ts", "packages/plugins/*/test/**/*.ts"]
 }
